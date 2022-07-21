@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cefalo.JustAnotherBlogsite.Database\Cefalo.JustAnotherBlogsite.Database.csproj" />
+    <ProjectReference Include="..\Cefalo.JustAnotherBlogsite.Repository\Cefalo.JustAnotherBlogsite.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

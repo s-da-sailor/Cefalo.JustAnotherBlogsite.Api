@@ -10,4 +10,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Cefalo.JustAnotherBlogsite.Service\Cefalo.JustAnotherBlogsite.Service.csproj" />
+  </ItemGroup>
+
 </Project>
