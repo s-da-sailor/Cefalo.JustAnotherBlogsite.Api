@@ -3,13 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cefalo.JustAnotherBlogsite.Api", "Cefalo.JustAnotherBlogsite.Api\Cefalo.JustAnotherBlogsite.Api.csproj", "{EC9DF3F1-94C7-4D14-B4B2-E7426C06B6E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.JustAnotherBlogsite.Api", "Cefalo.JustAnotherBlogsite.Api\Cefalo.JustAnotherBlogsite.Api.csproj", "{EC9DF3F1-94C7-4D14-B4B2-E7426C06B6E2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B0302671-F4BF-4FA8-A4BA-B831EDBC69E5} = {B0302671-F4BF-4FA8-A4BA-B831EDBC69E5}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cefalo.JustAnotherBlogsite.Service", "Cefalo.JustAnotherBlogsite.Service\Cefalo.JustAnotherBlogsite.Service.csproj", "{3FA80F83-5F74-41CC-9DEB-9CA941E814D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.JustAnotherBlogsite.Service", "Cefalo.JustAnotherBlogsite.Service\Cefalo.JustAnotherBlogsite.Service.csproj", "{3FA80F83-5F74-41CC-9DEB-9CA941E814D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cefalo.JustAnotherBlogsite.Repository", "Cefalo.JustAnotherBlogsite.Repository\Cefalo.JustAnotherBlogsite.Repository.csproj", "{F036D9C3-A8F0-4729-8693-D1EE4D83E606}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.JustAnotherBlogsite.Repository", "Cefalo.JustAnotherBlogsite.Repository\Cefalo.JustAnotherBlogsite.Repository.csproj", "{F036D9C3-A8F0-4729-8693-D1EE4D83E606}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cefalo.JustAnotherBlogsite.Database", "Cefalo.JustAnotherBlogsite.Database\Cefalo.JustAnotherBlogsite.Database.csproj", "{B0302671-F4BF-4FA8-A4BA-B831EDBC69E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.JustAnotherBlogsite.Database", "Cefalo.JustAnotherBlogsite.Database\Cefalo.JustAnotherBlogsite.Database.csproj", "{B0302671-F4BF-4FA8-A4BA-B831EDBC69E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
