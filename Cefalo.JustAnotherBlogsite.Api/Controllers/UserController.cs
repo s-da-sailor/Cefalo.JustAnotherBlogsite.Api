@@ -1,4 +1,5 @@
 ﻿using Cefalo.JustAnotherBlogsite.Database.Context;
+using Cefalo.JustAnotherBlogsite.Service.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,75 +10,57 @@ namespace Cefalo.JustAnotherBlogsite.Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IUserService _userService;
 
-        public UserController(DataContext context)
+        public UserController(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> Get()
+        public async Task<ActionResult<List<User>>> GetUsersAsync()
         {
-            return Ok(await _context.Users.ToListAsync());
+            var users = await _userService.GetUsersAsync();
+            return Ok(users);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> Get(int id)
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<User>> GetUserAsync(int userId)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userService.GetUserByUserIdAsync(userId);
 
             if(user == null)
             {
-                return NotFound("User not found.");
+                return NotFound("User not found");
             }
 
             return Ok(user);
         }
 
-        [HttpPost]
-        [Route("signup")]
-        public async Task<ActionResult<List<User>>> Signup(User user)
+        [HttpPut("{userId}")]
+        public async Task<ActionResult<List<User>>> UpdateUserAsync(int userId, User updatedUser)
         {
-            user.CreatedAt = DateTime.Now;
-            user.UpdatedAt = DateTime.Now;
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return Ok(user);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult<List<User>>> UpdateUser(int id, User updatedUser)
-        {
-            var user = await _context.Users.FindAsync(id);
-            
-            if(user == null)
-            {
-                return NotFound("User not found.");
-            }
-
-            user.FullName = updatedUser.FullName;
-            user.Username = updatedUser.Username;
-            user.Email = updatedUser.Email;
-            user.UpdatedAt = DateTime.Now;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(user);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteUser(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userService.GetUserByUserIdAsync(userId);
 
             if (user == null)
             {
                 return NotFound("User not found.");
             }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            await _userService.UpdateUserAsync(userId, updatedUser);
+
+            return Ok(user);
+        }
+
+        [HttpDelete("{userId}")]
+        public async Task<ActionResult> DeleteUserAsync(int userId)
+        {
+            var user = await _userService.DeleteUserAsync(userId);
+
+            if (user == false)
+            {
+                return NotFound("User not found.");
+            }
 
             return NoContent();
         }

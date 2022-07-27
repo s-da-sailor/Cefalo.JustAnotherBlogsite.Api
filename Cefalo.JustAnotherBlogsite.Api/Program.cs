@@ -1,4 +1,8 @@
 using Cefalo.JustAnotherBlogsite.Database.Context;
+using Cefalo.JustAnotherBlogsite.Repository.Contracts;
+using Cefalo.JustAnotherBlogsite.Repository.Repositories;
+using Cefalo.JustAnotherBlogsite.Service.Contracts;
+using Cefalo.JustAnotherBlogsite.Service.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,10 +10,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
