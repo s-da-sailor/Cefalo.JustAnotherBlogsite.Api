@@ -13,7 +13,7 @@ namespace Cefalo.JustAnotherBlogsite.Repository.Contracts
         public Task<List<User>> GetUsersAsync();
         public Task<User?> GetUserByUserIdAsync(int userId);
         public Task<User?> GetUserByUsernameAsync(string username);
-        public Task<User?> UpdateUserAsync(int userId, User updatedUser);
+        //public Task<User?> UpdateUserAsync(int userId, User updatedUser);
         public Task<bool> DeleteUserAsync(User user);
     }
 }

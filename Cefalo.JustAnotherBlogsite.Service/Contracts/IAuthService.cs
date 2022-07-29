@@ -1,4 +1,5 @@
 ﻿using Cefalo.JustAnotherBlogsite.Api;
+using Cefalo.JustAnotherBlogsite.Service.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Cefalo.JustAnotherBlogsite.Service.Contracts
 {
     public interface IAuthService
     {
-        public Task<string> SignupAsync(User user);
+        public Task<string> SignupAsync(SignupDto request);
+        public Task<string> LoginAsync(LoginDto request);
     }
 }

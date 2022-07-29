@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cefalo.JustAnotherBlogsite.Api.Controllers
 {
-    [Route("api/[controller]")]
+    /*[Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -64,5 +64,5 @@ namespace Cefalo.JustAnotherBlogsite.Api.Controllers
 
             return NoContent();
         }
-    }
+    }*/
 }

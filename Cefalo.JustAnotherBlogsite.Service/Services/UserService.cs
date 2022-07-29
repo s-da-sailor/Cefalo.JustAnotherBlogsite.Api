@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Cefalo.JustAnotherBlogsite.Service.Services
 {
-    public class UserService : IUserService
+    /*public class UserService : IUserService 
     {
         private readonly IUserRepository _userRepository;
 
@@ -49,5 +49,5 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
 
             return await _userRepository.DeleteUserAsync(user);
         }
-    }
+    }*/
 }

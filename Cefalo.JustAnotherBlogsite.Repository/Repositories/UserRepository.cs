@@ -40,7 +40,7 @@ namespace Cefalo.JustAnotherBlogsite.Repository.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 
-        public async Task<User?> UpdateUserAsync(int userId, User updatedUser)
+       /* public async Task<User?> UpdateUserAsync(int userId, User updatedUser)
         {
             var user = await _context.Users.FindAsync(userId);
 
@@ -57,7 +57,7 @@ namespace Cefalo.JustAnotherBlogsite.Repository.Repositories
             await _context.SaveChangesAsync();
 
             return user;
-        }
+        }*/
 
         public async Task<bool> DeleteUserAsync(User user)
         {
