@@ -1,6 +1,7 @@
 ﻿using Cefalo.JustAnotherBlogsite.Database.Context;
 using Cefalo.JustAnotherBlogsite.Service.Contracts;
 using Cefalo.JustAnotherBlogsite.Service.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,13 @@ namespace Cefalo.JustAnotherBlogsite.Api.Controllers
         {
             string token = await _authService.LoginAsync(request);
             return Ok(token);
+        }
+
+        [HttpGet, Authorize(Roles = "2")]
+        [Route("test")]
+        public async Task<ActionResult<string>> TestRoute()
+        {
+            return Ok("Yo this is a test");
         }
     }
 }

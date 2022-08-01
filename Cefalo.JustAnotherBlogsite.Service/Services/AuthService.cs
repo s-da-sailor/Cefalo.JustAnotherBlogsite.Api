@@ -47,7 +47,6 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
 
             User createdUser = await _userRepository.CreateUserAsync(user);
 
-            // @TODO: Handle Token generation
             string token = CreateToken(createdUser);
             return token;
         }
@@ -75,7 +74,9 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
