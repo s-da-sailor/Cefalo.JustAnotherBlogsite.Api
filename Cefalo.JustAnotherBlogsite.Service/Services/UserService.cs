@@ -1,53 +1,155 @@
-﻿using Cefalo.JustAnotherBlogsite.Api;
+﻿using AutoMapper;
+using Cefalo.JustAnotherBlogsite.Api;
 using Cefalo.JustAnotherBlogsite.Repository.Contracts;
 using Cefalo.JustAnotherBlogsite.Service.Contracts;
+using Cefalo.JustAnotherBlogsite.Service.Dtos;
+using Cefalo.JustAnotherBlogsite.Service.Exceptions;
+using Cefalo.JustAnotherBlogsite.Service.Utilities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Cefalo.JustAnotherBlogsite.Service.Services
 {
-    /*public class UserService : IUserService 
+    public class UserService : IUserService 
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<List<User>> GetUsersAsync()
+        public async Task<List<UserDetailsDto>> GetUsersAsync()
         {
-            return await _userRepository.GetUsersAsync();
+            var users =  await _userRepository.GetUsersAsync();
+
+            var userDetailsList = _mapper.Map<List<UserDetailsDto>>(users);
+
+            return userDetailsList;
         }
 
-        public async Task<User?> GetUserByUserIdAsync(int userId)
+        public async Task<UserDetailsDto> GetUserByUserIdAsync(int userId)
         {
-            return await _userRepository.GetUserByUserIdAsync(userId);
+            var user = await _userRepository.GetUserByUserIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new NotFoundException("User not found.");
+            }
+
+            var userDetails = _mapper.Map<UserDetailsDto>(user);
+
+            return userDetails;
         }
 
-        public async Task<User?> GetUserByUsernameAsync(string username)
+        public async Task<UserDetailsDto> GetUserByUsernameAsync(string username)
         {
-            return await _userRepository.GetUserByUsernameAsync(username);
+            var user =  await _userRepository.GetUserByUsernameAsync(username);
+
+            if (user == null)
+            {
+                throw new NotFoundException("User not found.");
+            }
+
+            var userDetails = _mapper.Map<UserDetailsDto>(user);
+
+            return userDetails;
         }
 
-        public async Task<User?> UpdateUserAsync(int userId, User updatedUser)
+        public async Task<UserDetailsDto> UpdateUserAsync(int userId, UserUpdateDto userDetails)
         {
-            updatedUser.UpdatedAt = DateTime.UtcNow;
-            return await _userRepository.UpdateUserAsync(userId, updatedUser);
+            var user = await _userRepository.GetUserByUserIdAsync(userId);
+
+            if(user == null)
+            {
+                throw new NotFoundException("User not found.");
+            }
+
+            //@TODO: handle if the updated user is the user who is logged in
+            if (_httpContextAccessor.HttpContext != null)
+            {
+                var currentUserIdString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var currentUserRole = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
+
+                var tokenGenerationTimeString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Expiration)?.Value;
+                var tokenGenerationTime = Convert.ToDateTime(tokenGenerationTimeString);
+
+                if (!AuthChecker.IsUserAuthorized(currentUserIdString, userId.ToString(), currentUserRole))
+                {
+                    throw new ForbiddenException("You are not authorized.");
+                }
+
+                if (AuthChecker.IsTokenExpired(tokenGenerationTime, user.PasswordChangedAt))
+                {
+                    throw new UnauthorizedException("Token is expired. Log in again.");
+                }
+            }
+            else
+            {
+                throw new BadRequestException("Bad Request.");
+            }
+
+            user.FullName = userDetails.FullName;
+            user.Email = userDetails.Email;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            if (userDetails.Password != null)
+            {
+                PasswordHash.CreatePasswordHash(userDetails.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+                user.PasswordChangedAt = DateTime.UtcNow;
+            }
+
+            var updatedUser =  await _userRepository.UpdateUserAsync(userId, user);
+
+            var updatedUserDetails = _mapper.Map<UserDetailsDto>(updatedUser);
+
+            return updatedUserDetails;
         }
 
         public async Task<bool> DeleteUserAsync(int userId)
         {
-            User? user = await _userRepository.GetUserByUserIdAsync(userId);
+            var user = await _userRepository.GetUserByUserIdAsync(userId);
 
+            //@TODO: handle user not found here
             if(user == null)
             {
-                return false;
+                throw new NotFoundException("User not found.");
+            }
+
+            if(_httpContextAccessor.HttpContext != null)
+            {
+                var currentUserIdString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var currentUserRole = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
+
+                var tokenGenerationTime = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Expiration)?.Value;
+                var passwordChangedAt = Convert.ToDateTime(tokenGenerationTime);
+
+                if (!AuthChecker.IsUserAuthorized(currentUserIdString, userId.ToString(), currentUserRole))
+                {
+                    throw new ForbiddenException("You are not authorized.");
+                }
+
+                if (AuthChecker.IsTokenExpired(passwordChangedAt, user.PasswordChangedAt))
+                {
+                    throw new UnauthorizedException("Token is expired. Log in again.");
+                }
+            } else
+            {
+                throw new BadRequestException("Bad Request.");
             }
 
             return await _userRepository.DeleteUserAsync(user);
         }
-    }*/
+    }
 }

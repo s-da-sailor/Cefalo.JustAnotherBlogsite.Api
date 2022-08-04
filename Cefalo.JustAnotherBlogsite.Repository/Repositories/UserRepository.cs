@@ -40,24 +40,21 @@ namespace Cefalo.JustAnotherBlogsite.Repository.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         }
 
-       /* public async Task<User?> UpdateUserAsync(int userId, User updatedUser)
+        public async Task<User?> UpdateUserAsync(int userId, User updatedUser)
         {
             var user = await _context.Users.FindAsync(userId);
-
-            if (user == null)
-            {
-                return user;
-            }
 
             user.FullName = updatedUser.FullName;
             user.Email = updatedUser.Email;
             user.UpdatedAt = updatedUser.UpdatedAt;
-            user.Password = updatedUser.Password;
+            user.PasswordHash = updatedUser.PasswordHash;
+            user.PasswordSalt = updatedUser.PasswordSalt;
+            user.PasswordChangedAt = updatedUser.PasswordChangedAt;
 
             await _context.SaveChangesAsync();
 
             return user;
-        }*/
+        }
 
         public async Task<bool> DeleteUserAsync(User user)
         {

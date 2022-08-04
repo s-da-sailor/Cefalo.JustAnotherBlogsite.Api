@@ -1,14 +1,20 @@
+using Cefalo.JustAnotherBlogsite.Api.Middlewares;
 using Cefalo.JustAnotherBlogsite.Database.Context;
 using Cefalo.JustAnotherBlogsite.Repository.Contracts;
 using Cefalo.JustAnotherBlogsite.Repository.Repositories;
 using Cefalo.JustAnotherBlogsite.Service.Contracts;
+using Cefalo.JustAnotherBlogsite.Service.Exceptions;
 using Cefalo.JustAnotherBlogsite.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.Net;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +28,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 
 builder.Services.AddScoped<IAuthService, AuthService>();
-//builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddHttpContextAccessor();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -40,12 +47,12 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-
-
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+     
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
+        options.TokenValidationParameters = new TokenValidationParameters 
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
@@ -63,6 +70,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.CustomExceptionHandler();
 
 app.UseHttpsRedirection();
 

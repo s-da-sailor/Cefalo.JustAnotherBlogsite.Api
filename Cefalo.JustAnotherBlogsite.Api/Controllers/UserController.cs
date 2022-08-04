@@ -1,12 +1,14 @@
 ﻿using Cefalo.JustAnotherBlogsite.Database.Context;
 using Cefalo.JustAnotherBlogsite.Service.Contracts;
+using Cefalo.JustAnotherBlogsite.Service.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cefalo.JustAnotherBlogsite.Api.Controllers
 {
-    /*[Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -18,51 +20,38 @@ namespace Cefalo.JustAnotherBlogsite.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetUsersAsync()
+        public async Task<ActionResult<List<UserDetailsDto>>> GetUsersAsync()
         {
             var users = await _userService.GetUsersAsync();
             return Ok(users);
         }
 
         [HttpGet("{userId}")]
-        public async Task<ActionResult<User>> GetUserAsync(int userId)
+        public async Task<ActionResult<UserDetailsDto>> GetUserAsync(int userId)
         {
             var user = await _userService.GetUserByUserIdAsync(userId);
-
-            if(user == null)
-            {
-                return NotFound("User not found");
-            }
-
             return Ok(user);
         }
 
-        [HttpPut("{userId}")]
-        public async Task<ActionResult<List<User>>> UpdateUserAsync(int userId, User updatedUser)
+        [HttpPut("{userId}"), Authorize]
+        public async Task<ActionResult<List<UserDetailsDto>>> UpdateUserAsync(int userId, UserUpdateDto updatedUser)
         {
-            var user = await _userService.GetUserByUserIdAsync(userId);
+            var updatedUserDetails = await _userService.UpdateUserAsync(userId, updatedUser);
 
-            if (user == null)
-            {
-                return NotFound("User not found.");
-            }
-
-            await _userService.UpdateUserAsync(userId, updatedUser);
-
-            return Ok(user);
+            return Ok(updatedUserDetails);
         }
 
-        [HttpDelete("{userId}")]
+        [HttpDelete("{userId}"), Authorize]
         public async Task<ActionResult> DeleteUserAsync(int userId)
         {
             var user = await _userService.DeleteUserAsync(userId);
 
             if (user == false)
             {
-                return NotFound("User not found.");
+                return NotFound("Invalid Request.");
             }
 
             return NoContent();
         }
-    }*/
+    }
 }
