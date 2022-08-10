@@ -3,6 +3,8 @@ using Cefalo.JustAnotherBlogsite.Database.Context;
 using Cefalo.JustAnotherBlogsite.Repository.Contracts;
 using Cefalo.JustAnotherBlogsite.Repository.Repositories;
 using Cefalo.JustAnotherBlogsite.Service.Contracts;
+using Cefalo.JustAnotherBlogsite.Service.Dtos;
+using Cefalo.JustAnotherBlogsite.Service.DtoValidators;
 using Cefalo.JustAnotherBlogsite.Service.Exceptions;
 using Cefalo.JustAnotherBlogsite.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,6 +33,10 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<BaseDtoValidator<SignupDto>, SignupDtoValidator>();
+builder.Services.AddScoped<BaseDtoValidator<LoginDto>, LoginDtoValidator>();
+builder.Services.AddScoped<BaseDtoValidator<UserUpdateDto>, UserUpdateDtoValidator>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

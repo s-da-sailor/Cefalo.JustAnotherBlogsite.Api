@@ -1,5 +1,6 @@
 ﻿using Cefalo.JustAnotherBlogsite.Service.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
+using System.ComponentModel;
 using System.Net;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -37,6 +38,11 @@ namespace Cefalo.JustAnotherBlogsite.Api.Middlewares
                             errorMessage = error.Message;
                             errorStatusCode = (int)HttpStatusCode.BadRequest;
                             break;
+                        default:
+                            errorMessage = "Something went wrong";
+                            errorStatusCode = (int)HttpStatusCode.InternalServerError;
+                            break;
+
                     }
 
                     context.Response.ContentType = Text.Plain;

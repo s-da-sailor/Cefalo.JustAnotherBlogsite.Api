@@ -1,4 +1,5 @@
 ﻿using Cefalo.JustAnotherBlogsite.Api;
+using Cefalo.JustAnotherBlogsite.Database.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,5 +14,11 @@ namespace Cefalo.JustAnotherBlogsite.Database.Context
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

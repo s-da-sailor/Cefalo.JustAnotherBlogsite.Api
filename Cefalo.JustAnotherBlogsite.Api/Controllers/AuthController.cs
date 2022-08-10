@@ -35,12 +35,5 @@ namespace Cefalo.JustAnotherBlogsite.Api.Controllers
             string token = await _authService.LoginAsync(request);
             return Ok(token);
         }
-
-        [HttpGet, Authorize(Roles = "2")]
-        [Route("test")]
-        public async Task<ActionResult<string>> TestRoute()
-        {
-            return Ok("Yo this is a test");
-        }
     }
 }

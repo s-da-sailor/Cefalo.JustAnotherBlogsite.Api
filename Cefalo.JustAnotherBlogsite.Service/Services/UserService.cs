@@ -3,6 +3,7 @@ using Cefalo.JustAnotherBlogsite.Api;
 using Cefalo.JustAnotherBlogsite.Repository.Contracts;
 using Cefalo.JustAnotherBlogsite.Service.Contracts;
 using Cefalo.JustAnotherBlogsite.Service.Dtos;
+using Cefalo.JustAnotherBlogsite.Service.DtoValidators;
 using Cefalo.JustAnotherBlogsite.Service.Exceptions;
 using Cefalo.JustAnotherBlogsite.Service.Utilities;
 using Microsoft.AspNetCore.Http;
@@ -21,12 +22,14 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly BaseDtoValidator<UserUpdateDto> _userUpdateDtoValidator;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public UserService(IUserRepository userRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, BaseDtoValidator<UserUpdateDto> userUpdateDtoValidator)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _userUpdateDtoValidator = userUpdateDtoValidator;
         }
         public async Task<List<UserDetailsDto>> GetUsersAsync()
         {
@@ -67,6 +70,8 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
 
         public async Task<UserDetailsDto> UpdateUserAsync(int userId, UserUpdateDto userDetails)
         {
+            _userUpdateDtoValidator.ValidateDto(userDetails);
+
             var user = await _userRepository.GetUserByUserIdAsync(userId);
 
             if(user == null)
@@ -74,7 +79,6 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
                 throw new NotFoundException("User not found.");
             }
 
-            //@TODO: handle if the updated user is the user who is logged in
             if (_httpContextAccessor.HttpContext != null)
             {
                 var currentUserIdString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -121,7 +125,6 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
         {
             var user = await _userRepository.GetUserByUserIdAsync(userId);
 
-            //@TODO: handle user not found here
             if(user == null)
             {
                 throw new NotFoundException("User not found.");

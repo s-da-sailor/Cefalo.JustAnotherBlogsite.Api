@@ -1,11 +1,13 @@
-﻿namespace Cefalo.JustAnotherBlogsite.Api
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Cefalo.JustAnotherBlogsite.Api
 {
     public class User
     {
         public int UserId { get; set; }
-        public string Username { get; set; } = string.Empty;
-        public string FullName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
+        public string Username { get; set; } = String.Empty;
+        public string FullName { get; set; } = String.Empty;
+        public string Email { get; set; } = String.Empty;
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public int Role { get; set; } = 1;

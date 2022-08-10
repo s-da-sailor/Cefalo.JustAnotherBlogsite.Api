@@ -3,8 +3,10 @@ using Cefalo.JustAnotherBlogsite.Api;
 using Cefalo.JustAnotherBlogsite.Repository.Contracts;
 using Cefalo.JustAnotherBlogsite.Service.Contracts;
 using Cefalo.JustAnotherBlogsite.Service.Dtos;
+using Cefalo.JustAnotherBlogsite.Service.DtoValidators;
 using Cefalo.JustAnotherBlogsite.Service.Exceptions;
 using Cefalo.JustAnotherBlogsite.Service.Utilities;
+using FluentValidation.Results;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -23,17 +25,22 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly BaseDtoValidator<SignupDto> _signupDtoValidator;
+        private readonly BaseDtoValidator<LoginDto> _loginDtoValidator;
 
-        public AuthService(IConfiguration configuration, IUserRepository userRepository, IMapper mapper)
+        public AuthService(IConfiguration configuration, IUserRepository userRepository, IMapper mapper, 
+            BaseDtoValidator<SignupDto> signupDtoValidator, BaseDtoValidator<LoginDto> loginDtoValidator)
         {
             _configuration = configuration;
             _userRepository = userRepository;
             _mapper = mapper;
+            _signupDtoValidator = signupDtoValidator;
+            _loginDtoValidator = loginDtoValidator;
         }
 
         public async Task<string> SignupAsync(SignupDto userInfo)
         {
-            // @TODO: Dto Validation
+            _signupDtoValidator.ValidateDto(userInfo);
 
             User user = _mapper.Map<User>(userInfo);
 
@@ -50,6 +57,8 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
 
         public async Task<string> LoginAsync(LoginDto request)
         {
+            _loginDtoValidator.ValidateDto(request);
+
             User? user = await _userRepository.GetUserByUsernameAsync(request.Username);
 
             if(user == null)
