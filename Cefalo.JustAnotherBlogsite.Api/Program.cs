@@ -1,4 +1,5 @@
 using Cefalo.JustAnotherBlogsite.Api.Middlewares;
+using Cefalo.JustAnotherBlogsite.Api.Utils.Formatters;
 using Cefalo.JustAnotherBlogsite.Database.Context;
 using Cefalo.JustAnotherBlogsite.Repository.Contracts;
 using Cefalo.JustAnotherBlogsite.Repository.Repositories;
@@ -22,7 +23,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
+builder.Services.AddControllers(config =>
+{
+    config.RespectBrowserAcceptHeader = true;
+}).AddXmlDataContractSerializerFormatters().AddMvcOptions(option =>
+{
+    option.OutputFormatters.Add(new XmlOutputFormatter());
+    option.OutputFormatters.Add(new PlainTextOutputFormatter());
+    option.OutputFormatters.Add(new HtmlOutputFormatter());
+});
 
 builder.Services.AddDbContext<DataContext>(options =>
 {
