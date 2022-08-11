@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Cefalo.JustAnotherBlogsite.Database.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Cefalo.JustAnotherBlogsite.Api
 {
@@ -14,6 +15,7 @@ namespace Cefalo.JustAnotherBlogsite.Api
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime PasswordChangedAt { get; set; }
+        public ICollection<Blog>? Blogs { get; set; }
     }
 }
   

@@ -31,12 +31,16 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<BaseDtoValidator<SignupDto>, SignupDtoValidator>();
 builder.Services.AddScoped<BaseDtoValidator<LoginDto>, LoginDtoValidator>();
 builder.Services.AddScoped<BaseDtoValidator<UserUpdateDto>, UserUpdateDtoValidator>();
+builder.Services.AddScoped<BaseDtoValidator<BlogPostDto>, BlogPostDtoValidator>();
+builder.Services.AddScoped<BaseDtoValidator<BlogUpdateDto>, BlogUpdateDtoValidator>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
