@@ -58,13 +58,15 @@ namespace Cefalo.JustAnotherBlogsite.Api.Utils.Formatters
 
         private static void ConvertToHtml(StringBuilder buffer, BlogDetailsDto post)
         {
+            buffer.AppendLine("<div>");
             buffer.AppendLine($"<h3>id : {post.BlogId}</h2>");
             buffer.AppendLine($"<h1>title : {post.Title}</h1>");
             buffer.AppendLine($"<p>description : {post.Description}</p>");
             buffer.AppendLine($"<h2>author: {post.AuthorUsername}</h2>");
             buffer.AppendLine($"<h3>createdAt : {post.CreatedAt}</h3>");
             buffer.AppendLine($"<h3>updatedAt : {post.UpdatedAt}</h3>");
-            buffer.AppendLine();
+            buffer.AppendLine("</div>");
+            buffer.AppendLine("<br>");
         }
     }
 }

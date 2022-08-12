@@ -27,7 +27,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(config =>
 {
     config.RespectBrowserAcceptHeader = true;
-}).AddXmlDataContractSerializerFormatters().AddMvcOptions(option =>
+}).AddMvcOptions(option =>
 {
     option.OutputFormatters.Add(new XmlOutputFormatter());
     option.OutputFormatters.Add(new PlainTextOutputFormatter());

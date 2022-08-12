@@ -54,12 +54,14 @@ namespace Cefalo.JustAnotherBlogsite.Api.Utils.Formatters
 
         private static void ConvertToXml(StringBuilder buffer, BlogDetailsDto post)
         {
+            buffer.AppendLine("<blog>");
             buffer.AppendLine($"<id>{post.BlogId}</id>");
             buffer.AppendLine($"<title>{post.Title}</title>");
             buffer.AppendLine($"<description>{post.Description}</description>");
             buffer.AppendLine($"<author>{post.AuthorUsername}</author>");
             buffer.AppendLine($"<createdAt>{post.CreatedAt}</createdAt>");
             buffer.AppendLine($"<updatedAt>{post.UpdatedAt}</updatedAt>");
+            buffer.AppendLine("</blog>");
         }
     }
 }
