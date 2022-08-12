@@ -57,9 +57,9 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
             return blogDetails;
         }
 
-        public async Task<List<BlogDetailsDto>> GetBlogsAsync()
+        public async Task<List<BlogDetailsDto>> GetBlogsAsync(int pageNumber, int pageSize)
         {
-            var blogs = await _blogRepository.GetBlogsAsync();
+            var blogs = await _blogRepository.GetBlogsAsync(pageNumber, pageSize);
 
             var blogDetailsList = _mapper.Map<List<BlogDetailsDto>>(blogs);
 

@@ -1,4 +1,6 @@
-﻿using Cefalo.JustAnotherBlogsite.Service.Contracts;
+﻿using Cefalo.JustAnotherBlogsite.Api.Filters;
+using Cefalo.JustAnotherBlogsite.Api.Wrappers;
+using Cefalo.JustAnotherBlogsite.Service.Contracts;
 using Cefalo.JustAnotherBlogsite.Service.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,32 +20,38 @@ namespace Cefalo.JustAnotherBlogsite.Api.Controllers
         }
 
         [HttpPost, Authorize]
-        public async Task<ActionResult<BlogDetailsDto>> PostBlogAsync(BlogPostDto request)
+        public async Task<ActionResult<Response<BlogDetailsDto>>> PostBlogAsync(BlogPostDto request)
         {
             var blog = await _blogService.PostBlogAsync(request);
-            return Ok(blog);
+            var response = new Response<BlogDetailsDto>(blog);
+            return Ok(response);
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<BlogDetailsDto>>> GetBlogsAsync()
+        public async Task<ActionResult<PagedResponse<List<BlogDetailsDto>>>> GetBlogsAsync([FromQuery] PaginationFilter filter)
         {
-            var blogs = await _blogService.GetBlogsAsync();
-            return Ok(blogs);
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var blogs = await _blogService.GetBlogsAsync(validFilter.PageNumber, validFilter.PageSize);
+            var pagedResponse = new PagedResponse<List<BlogDetailsDto>>(blogs, validFilter.PageNumber, validFilter.PageSize);
+            pagedResponse.TotalRecords = blogs.Count;
+            return Ok(pagedResponse);
         }
 
         [HttpGet("{blogId}")]
-        public async Task<ActionResult<BlogDetailsDto>> GetBlogAsync(int blogId)
+        public async Task<ActionResult<Response<BlogDetailsDto>>> GetBlogAsync(int blogId)
         {
             var blog = await _blogService.GetBlogByBlogIdAsync(blogId);
-            return Ok(blog);
+            var response = new Response<BlogDetailsDto>(blog);
+            return Ok(response);
         }
 
         [HttpPut("{blogId}"), Authorize]
-        public async Task<ActionResult<List<BlogDetailsDto>>> UpdateBlogAsync(int blogId, BlogUpdateDto updatedBlog)
+        public async Task<ActionResult<Response<BlogDetailsDto>>> UpdateBlogAsync(int blogId, BlogUpdateDto updatedBlog)
         {
             var updatedBlogDetails = await _blogService.UpdateBlogAsync(blogId, updatedBlog);
+            var response = new Response<BlogDetailsDto>(updatedBlogDetails);
 
-            return Ok(updatedBlogDetails);
+            return Ok(response);
         }
 
         [HttpDelete("{blogId}"), Authorize]

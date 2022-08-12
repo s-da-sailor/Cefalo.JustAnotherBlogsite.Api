@@ -31,9 +31,9 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
             _httpContextAccessor = httpContextAccessor;
             _userUpdateDtoValidator = userUpdateDtoValidator;
         }
-        public async Task<List<UserDetailsDto>> GetUsersAsync()
+        public async Task<List<UserDetailsDto>> GetUsersAsync(int pageNumber, int pageSize)
         {
-            var users =  await _userRepository.GetUsersAsync();
+            var users =  await _userRepository.GetUsersAsync(pageNumber, pageSize);
 
             var userDetailsList = _mapper.Map<List<UserDetailsDto>>(users);
 

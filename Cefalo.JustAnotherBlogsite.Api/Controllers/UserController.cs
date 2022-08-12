@@ -1,4 +1,6 @@
-﻿using Cefalo.JustAnotherBlogsite.Database.Context;
+﻿using Cefalo.JustAnotherBlogsite.Api.Filters;
+using Cefalo.JustAnotherBlogsite.Api.Wrappers;
+using Cefalo.JustAnotherBlogsite.Database.Context;
 using Cefalo.JustAnotherBlogsite.Service.Contracts;
 using Cefalo.JustAnotherBlogsite.Service.Dtos;
 using Microsoft.AspNetCore.Authorization;
@@ -20,25 +22,29 @@ namespace Cefalo.JustAnotherBlogsite.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<UserDetailsDto>>> GetUsersAsync()
+        public async Task<ActionResult<PagedResponse<List<UserDetailsDto>>>> GetUsersAsync([FromQuery] PaginationFilter filter)
         {
-            var users = await _userService.GetUsersAsync();
-            return Ok(users);
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var users = await _userService.GetUsersAsync(validFilter.PageNumber, validFilter.PageSize);
+            var pagedResponse = new PagedResponse<List<UserDetailsDto>>(users, validFilter.PageNumber, validFilter.PageSize);
+            pagedResponse.TotalRecords = users.Count;
+            return Ok(pagedResponse);
         }
 
         [HttpGet("{userId}")]
-        public async Task<ActionResult<UserDetailsDto>> GetUserAsync(int userId)
+        public async Task<ActionResult<Response<UserDetailsDto>>> GetUserAsync(int userId)
         {
             var user = await _userService.GetUserByUserIdAsync(userId);
-            return Ok(user);
+            var response = new Response<UserDetailsDto>(user);
+            return Ok(response);
         }
 
         [HttpPut("{userId}"), Authorize]
-        public async Task<ActionResult<List<UserDetailsDto>>> UpdateUserAsync(int userId, UserUpdateDto updatedUser)
+        public async Task<ActionResult<Response<UserDetailsDto>>> UpdateUserAsync(int userId, UserUpdateDto updatedUser)
         {
             var updatedUserDetails = await _userService.UpdateUserAsync(userId, updatedUser);
-
-            return Ok(updatedUserDetails);
+            var response = new Response<UserDetailsDto>(updatedUserDetails);
+            return Ok(response);
         }
 
         [HttpDelete("{userId}"), Authorize]

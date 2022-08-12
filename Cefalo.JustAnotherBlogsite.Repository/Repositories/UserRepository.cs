@@ -25,9 +25,12 @@ namespace Cefalo.JustAnotherBlogsite.Repository.Repositories
             return user;
         }
 
-        public async Task<List<User>> GetUsersAsync()
+        public async Task<List<User>> GetUsersAsync(int pageNumber, int pageSize)
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task<User?> GetUserByUserIdAsync(int userId)

@@ -10,7 +10,7 @@ namespace Cefalo.JustAnotherBlogsite.Service.Contracts
 {
     public interface IUserService
     {
-        public Task<List<UserDetailsDto>> GetUsersAsync();
+        public Task<List<UserDetailsDto>> GetUsersAsync(int pageNumber, int pageSize);
         public Task<UserDetailsDto> GetUserByUserIdAsync(int userId);
         public Task<UserDetailsDto> GetUserByUsernameAsync(string username);
         public Task<UserDetailsDto> UpdateUserAsync(int userId, UserUpdateDto updatedUser);

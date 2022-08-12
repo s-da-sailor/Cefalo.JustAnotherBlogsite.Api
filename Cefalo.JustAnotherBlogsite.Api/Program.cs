@@ -29,9 +29,13 @@ builder.Services.AddControllers(config =>
     config.RespectBrowserAcceptHeader = true;
 }).AddMvcOptions(option =>
 {
-    option.OutputFormatters.Add(new XmlOutputFormatter());
-    option.OutputFormatters.Add(new PlainTextOutputFormatter());
-    option.OutputFormatters.Add(new HtmlOutputFormatter());
+    option.OutputFormatters.Add(new BlogXmlOutputFormatter());
+    option.OutputFormatters.Add(new BlogPlainTextOutputFormatter());
+    option.OutputFormatters.Add(new BlogHtmlOutputFormatter());
+
+    option.OutputFormatters.Add(new UserXmlOutputFormatter());
+    option.OutputFormatters.Add(new UserPlainTextOutputFormatter());
+    option.OutputFormatters.Add(new UserHtmlOutputFormatter());
 });
 
 builder.Services.AddDbContext<DataContext>(options =>

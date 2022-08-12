@@ -26,9 +26,13 @@ namespace Cefalo.JustAnotherBlogsite.Repository.Repositories
             return await _context.Blogs.Include(u => u.Author).FirstOrDefaultAsync(u => u.BlogId == blog.BlogId);
         }
 
-        public async Task<List<Blog>> GetBlogsAsync()
+        public async Task<List<Blog>> GetBlogsAsync(int pageNumber, int pageSize)
         {
-            return await _context.Blogs.Include(u => u.Author).ToListAsync();
+            return await _context.Blogs
+                .Include(u => u.Author)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task<Blog?> GetBlogByBlogIdAsync(int blogId)
