@@ -14,6 +14,9 @@ namespace Cefalo.JustAnotherBlogsite.Service.AutoMapperProfiles
         public BlogProfile()
         {
             CreateMap<Blog, BlogDetailsDto>()
+                .ForMember(
+                dest => dest.AuthorId,
+                opt => opt.MapFrom(src => src.Author.UserId))
                  .ForMember(
                 dest => dest.AuthorUsername,
                 opt => opt.MapFrom(src => src.Author.Username));

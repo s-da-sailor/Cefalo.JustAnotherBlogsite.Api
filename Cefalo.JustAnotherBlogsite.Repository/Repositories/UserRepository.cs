@@ -1,5 +1,6 @@
 ﻿using Cefalo.JustAnotherBlogsite.Api;
 using Cefalo.JustAnotherBlogsite.Database.Context;
+using Cefalo.JustAnotherBlogsite.Database.Models;
 using Cefalo.JustAnotherBlogsite.Repository.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,9 +29,15 @@ namespace Cefalo.JustAnotherBlogsite.Repository.Repositories
         public async Task<List<User>> GetUsersAsync(int pageNumber, int pageSize)
         {
             return await _context.Users
+                .OrderByDescending(u => u.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+        }
+
+        public async Task<int> GetUserCountAsync()
+        {
+            return await _context.Users.CountAsync();
         }
 
         public async Task<User?> GetUserByUserIdAsync(int userId)
@@ -65,6 +72,40 @@ namespace Cefalo.JustAnotherBlogsite.Repository.Repositories
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<List<User>> SearchUserAsync(int pageNumber, int pageSize, string searchParam)
+        {
+            return await _context.Users
+                .Where(user => !string.IsNullOrEmpty(user.Username) && user.Username.Contains(searchParam))
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetSearchUserCountAsync(string searchParam)
+        {
+            return await _context.Users
+                .Where(user => !string.IsNullOrEmpty(user.Username) && user.Username.Contains(searchParam))
+                .CountAsync();
+        }
+
+        public async Task<List<Blog>> GetUserSpecificBlogsAsync(int pageNumber, int pageSize, int userId)
+        {
+            return await _context.Blogs
+                .Where(u => u.AuthorId == userId)
+                .Include(u => u.Author)
+                .OrderByDescending(u => u.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetUserSpecificBlogCountAsync(int userId)
+        {
+            return await _context.Blogs
+                .Where(u => u.AuthorId == userId)
+                .CountAsync();
         }
     }
 }

@@ -38,6 +38,14 @@ builder.Services.AddControllers(config =>
     option.OutputFormatters.Add(new UserHtmlOutputFormatter());
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -98,6 +106,8 @@ if (app.Environment.IsDevelopment())
 app.CustomExceptionHandler();
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthentication();
 

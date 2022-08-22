@@ -30,9 +30,15 @@ namespace Cefalo.JustAnotherBlogsite.Repository.Repositories
         {
             return await _context.Blogs
                 .Include(u => u.Author)
+                .OrderByDescending(u => u.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+        }
+
+        public async Task<int> GetBlogCountAsync()
+        {
+            return await _context.Blogs.CountAsync();
         }
 
         public async Task<Blog?> GetBlogByBlogIdAsync(int blogId)

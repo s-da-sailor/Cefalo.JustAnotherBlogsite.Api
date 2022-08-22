@@ -35,5 +35,19 @@ namespace Cefalo.JustAnotherBlogsite.Api.Controllers
             string token = await _authService.LoginAsync(request);
             return Ok(token);
         }
+
+        [HttpPost]
+        [Route("logout")]
+        public async Task<ActionResult> LogoutAsync()
+        {
+            return NoContent();
+        }
+
+        [HttpPost]
+        [Route("verify"), Authorize]
+        public async Task<ActionResult> Verify()
+        {
+            return NoContent();
+        }
     }
 }

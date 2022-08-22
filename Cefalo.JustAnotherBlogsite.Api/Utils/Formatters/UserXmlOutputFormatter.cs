@@ -73,9 +73,9 @@ namespace Cefalo.JustAnotherBlogsite.Api.Utils.Formatters
         private static void ConvertToXmlUser(StringBuilder buffer, UserDetailsDto user)
         {
             buffer.AppendLine("<user>");
-            buffer.AppendLine($"<userid>{user.UserId}</userid>");
+            buffer.AppendLine($"<userId>{user.UserId}</userId>");
             buffer.AppendLine($"<username>{user.Username}</username>");
-            buffer.AppendLine($"<fullname>{user.FullName}</fullname>");
+            buffer.AppendLine($"<fullName>{user.FullName}</fullName>");
             buffer.AppendLine($"<email>{user.Email}</email>");
             buffer.AppendLine($"<role>{user.Role}</role>");
             buffer.AppendLine($"<createdAt>{user.CreatedAt}</createdAt>");

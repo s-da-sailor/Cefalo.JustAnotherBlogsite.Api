@@ -33,7 +33,7 @@ namespace Cefalo.JustAnotherBlogsite.Api.Controllers
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var blogs = await _blogService.GetBlogsAsync(validFilter.PageNumber, validFilter.PageSize);
             var pagedResponse = new PagedResponse<List<BlogDetailsDto>>(blogs, validFilter.PageNumber, validFilter.PageSize);
-            pagedResponse.TotalRecords = blogs.Count;
+            pagedResponse.TotalRecords = await _blogService.GetBlogCountAsync();
             return Ok(pagedResponse);
         }
 

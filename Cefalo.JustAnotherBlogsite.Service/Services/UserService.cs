@@ -40,6 +40,11 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
             return userDetailsList;
         }
 
+        public async Task<int> GetUserCountAsync()
+        {
+            return await _userRepository.GetUserCountAsync();
+        }
+
         public async Task<UserDetailsDto> GetUserByUserIdAsync(int userId)
         {
             var user = await _userRepository.GetUserByUserIdAsync(userId);
@@ -153,6 +158,34 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
             }
 
             return await _userRepository.DeleteUserAsync(user);
+        }
+
+        public async Task<List<UserDetailsDto>> SearchUserAsync(int pageNumber, int pageSize, string searchParam)
+        {
+            var users = await _userRepository.SearchUserAsync(pageNumber, pageSize, searchParam);
+
+            var userDetailsList = _mapper.Map<List<UserDetailsDto>>(users);
+
+            return userDetailsList;
+        }
+
+        public async Task<int> GetSearchUserCountAsync(string searchParam)
+        {
+            return await _userRepository.GetSearchUserCountAsync(searchParam);
+        }
+
+        public async Task<List<BlogDetailsDto>> GetUserSpecificBlogsAsync(int pageNumber, int pageSize, int userId)
+        {
+            var blogs = await _userRepository.GetUserSpecificBlogsAsync(pageNumber, pageSize, userId);
+
+            var blogDetailsList = _mapper.Map<List<BlogDetailsDto>>(blogs);
+
+            return blogDetailsList;
+        }
+
+        public async Task<int> GetUserSpecificBlogCountAsync(int userId)
+        {
+            return await _userRepository.GetUserSpecificBlogCountAsync(userId);
         }
     }
 }

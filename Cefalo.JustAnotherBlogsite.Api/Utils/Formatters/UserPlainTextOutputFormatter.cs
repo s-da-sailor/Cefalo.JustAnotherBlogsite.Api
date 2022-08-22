@@ -65,9 +65,9 @@ namespace Cefalo.JustAnotherBlogsite.Api.Utils.Formatters
 
         private static void ConvertToPlainTextUser(StringBuilder buffer, UserDetailsDto user)
         {
-            buffer.AppendLine($"userid : {user.UserId}");
+            buffer.AppendLine($"userId : {user.UserId}");
             buffer.AppendLine($"username : \"{user.Username}\"");
-            buffer.AppendLine($"fullname : \"{user.FullName}\"");
+            buffer.AppendLine($"fullName : \"{user.FullName}\"");
             buffer.AppendLine($"email : \"{user.Email}\"");
             buffer.AppendLine($"role : {user.Role}");
             buffer.AppendLine($"createdAt : \"{user.CreatedAt}\"");

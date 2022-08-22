@@ -16,7 +16,7 @@ namespace Cefalo.JustAnotherBlogsite.Service.Utilities
         }
         public static bool IsTokenExpired(DateTime tokenGenerationTime, DateTime passwordChangedAt)
         {
-            return tokenGenerationTime < passwordChangedAt;
+            return tokenGenerationTime.AddSeconds(1) < passwordChangedAt;
         }
     }
 }

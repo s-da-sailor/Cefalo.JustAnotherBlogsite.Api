@@ -27,7 +27,7 @@ namespace Cefalo.JustAnotherBlogsite.Api.Controllers
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var users = await _userService.GetUsersAsync(validFilter.PageNumber, validFilter.PageSize);
             var pagedResponse = new PagedResponse<List<UserDetailsDto>>(users, validFilter.PageNumber, validFilter.PageSize);
-            pagedResponse.TotalRecords = users.Count;
+            pagedResponse.TotalRecords = await _userService.GetUserCountAsync();
             return Ok(pagedResponse);
         }
 
@@ -58,6 +58,26 @@ namespace Cefalo.JustAnotherBlogsite.Api.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPost("search/{searchParam}")]
+        public async Task<ActionResult<PagedResponse<List<UserDetailsDto>>>> SearchUserAsync([FromQuery] PaginationFilter filter, string searchParam)
+        {
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var users = await _userService.SearchUserAsync(validFilter.PageNumber, validFilter.PageSize, searchParam);
+            var pagedResponse = new PagedResponse<List<UserDetailsDto>>(users, validFilter.PageNumber, validFilter.PageSize);
+            pagedResponse.TotalRecords = await _userService.GetSearchUserCountAsync(searchParam);
+            return Ok(pagedResponse);
+        }
+
+        [HttpGet("{userId}/blogs")]
+        public async Task<ActionResult<PagedResponse<List<BlogDetailsDto>>>> GetUserSpecificBlogsAsync([FromQuery] PaginationFilter filter, int userId)
+        {
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var blogs = await _userService.GetUserSpecificBlogsAsync(validFilter.PageNumber, validFilter.PageSize, userId);
+            var pagedResponse = new PagedResponse<List<BlogDetailsDto>>(blogs, validFilter.PageNumber, validFilter.PageSize);
+            pagedResponse.TotalRecords = await _userService.GetUserSpecificBlogCountAsync(userId);
+            return Ok(pagedResponse);
         }
     }
 }

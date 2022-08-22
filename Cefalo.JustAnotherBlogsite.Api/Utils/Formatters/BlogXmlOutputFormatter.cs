@@ -73,10 +73,11 @@ namespace Cefalo.JustAnotherBlogsite.Api.Utils.Formatters
         private static void ConvertToXmlBlog(StringBuilder buffer, BlogDetailsDto post)
         {
             buffer.AppendLine("<blog>");
-            buffer.AppendLine($"<id>{post.BlogId}</id>");
+            buffer.AppendLine($"<blogId>{post.BlogId}</blogId>");
             buffer.AppendLine($"<title>{post.Title}</title>");
             buffer.AppendLine($"<description>{post.Description}</description>");
-            buffer.AppendLine($"<author>{post.AuthorUsername}</author>");
+            buffer.AppendLine($"<authorId>{post.AuthorId}</authorId>");
+            buffer.AppendLine($"<authorUsername>{post.AuthorUsername}</authorUsername>");
             buffer.AppendLine($"<createdAt>{post.CreatedAt}</createdAt>");
             buffer.AppendLine($"<updatedAt>{post.UpdatedAt}</updatedAt>");
             buffer.AppendLine("</blog>");

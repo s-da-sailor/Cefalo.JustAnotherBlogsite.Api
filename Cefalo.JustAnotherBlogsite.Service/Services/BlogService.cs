@@ -66,6 +66,11 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
             return blogDetailsList;
         }
 
+        public async Task<int> GetBlogCountAsync()
+        {
+            return await _blogRepository.GetBlogCountAsync();
+        }
+
         public async Task<BlogDetailsDto> GetBlogByBlogIdAsync(int blogId)
         {
             var blog = await _blogRepository.GetBlogByBlogIdAsync(blogId);
@@ -96,7 +101,6 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
                 var currentUserIdString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var currentUserRole = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
                 
-                //@TODO Change IsUserAuthorized for Blog (if there is an error)
                 var tokenGenerationTimeString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Expiration)?.Value;
                 var tokenGenerationTime = Convert.ToDateTime(tokenGenerationTimeString);
 

@@ -77,9 +77,9 @@ namespace Cefalo.JustAnotherBlogsite.Api.Utils.Formatters
         private static void ConvertToHtmlUser(StringBuilder buffer, UserDetailsDto user)
         {
             buffer.AppendLine($"<div>");
-            buffer.AppendLine($"<h2>userid : {user.UserId}</h2>");
+            buffer.AppendLine($"<h2>userId : {user.UserId}</h2>");
             buffer.AppendLine($"<h2>username : {user.Username}</h2>");
-            buffer.AppendLine($"<h2>fullname : {user.FullName}</h2>");
+            buffer.AppendLine($"<h2>fullName : {user.FullName}</h2>");
             buffer.AppendLine($"<h2>email : {user.Email}</h2>");
             buffer.AppendLine($"<h2>role : {user.Role}</h2>");
             buffer.AppendLine($"<h2>createdAt : {user.CreatedAt}</h2>");

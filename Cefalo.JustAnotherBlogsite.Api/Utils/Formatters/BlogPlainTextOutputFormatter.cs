@@ -65,10 +65,11 @@ namespace Cefalo.JustAnotherBlogsite.Api.Utils.Formatters
 
         private static void ConvertToPlainTextBlog(StringBuilder buffer, BlogDetailsDto post)
         {
-            buffer.AppendLine($"id : {post.BlogId}");
+            buffer.AppendLine($"blogId : {post.BlogId}");
             buffer.AppendLine($"title : \"{post.Title}\"");
             buffer.AppendLine($"description : \"{post.Description}\"");
-            buffer.AppendLine($"author: \"{post.AuthorUsername}\"");
+            buffer.AppendLine($"authorId: {post.AuthorId}");
+            buffer.AppendLine($"authorUsername: \"{post.AuthorUsername}\"");
             buffer.AppendLine($"createdAt : \"{post.CreatedAt}\"");
             buffer.AppendLine($"updatedAt : \"{post.UpdatedAt}\"");
             buffer.AppendLine();

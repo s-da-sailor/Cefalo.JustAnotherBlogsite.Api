@@ -11,6 +11,7 @@ namespace Cefalo.JustAnotherBlogsite.Repository.Contracts
     {
         public Task<Blog?> CreateBlogAsync(Blog blog);
         public Task<List<Blog>> GetBlogsAsync(int pageNumber, int pageSize);
+        public Task<int> GetBlogCountAsync();
         public Task<Blog?> GetBlogByBlogIdAsync(int blogId);
         public Task<Blog?> UpdateBlogAsync(int blogId, Blog updatedBlog);
         public Task<bool> DeleteBlogAsync(Blog blog);
