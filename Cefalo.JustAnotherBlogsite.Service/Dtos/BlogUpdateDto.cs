@@ -8,6 +8,12 @@ namespace Cefalo.JustAnotherBlogsite.Service.Dtos
 {
     public class BlogUpdateDto
     {
+        public BlogUpdateDto(string title, string description)
+        {
+            Title = title;
+            Description = description;
+        }
+
         public string Title { get; set; } = String.Empty;
         public string Description { get; set; } = String.Empty;
     }
