@@ -6,6 +6,7 @@ using Cefalo.JustAnotherBlogsite.Service.Dtos;
 using Cefalo.JustAnotherBlogsite.Service.DtoValidators;
 using Cefalo.JustAnotherBlogsite.Service.Exceptions;
 using Cefalo.JustAnotherBlogsite.Service.Utilities;
+using Cefalo.JustAnotherBlogsite.Service.Utilities.Contracts;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,17 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly BaseDtoValidator<BlogPostDto> _blogPostDtoValidator;
         private readonly BaseDtoValidator<BlogUpdateDto> _blogUpdateDtoValidator;
+        private readonly IAuthChecker _authchecker;
 
         public BlogService(IBlogRepository blogRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, 
-            BaseDtoValidator<BlogPostDto> blogPostDtoValidator, BaseDtoValidator<BlogUpdateDto> blogUpdateDtoValidator)
+            BaseDtoValidator<BlogPostDto> blogPostDtoValidator, BaseDtoValidator<BlogUpdateDto> blogUpdateDtoValidator, IAuthChecker authchecker)
         {
             _blogRepository = blogRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _blogPostDtoValidator = blogPostDtoValidator;
             _blogUpdateDtoValidator = blogUpdateDtoValidator;
+            _authchecker = authchecker;
         }
 
         public async Task<BlogDetailsDto> PostBlogAsync(BlogPostDto newBlog)
@@ -40,16 +43,9 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
 
             Blog blog = _mapper.Map<Blog>(newBlog);
 
-            if (_httpContextAccessor.HttpContext != null)
-            {
-                var currentUserIdString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUserIdString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                blog.AuthorId = Int32.Parse(currentUserIdString);
-            }
-            else
-            {
-                throw new BadRequestException("Bad Request.");
-            }
+            blog.AuthorId = Int32.Parse(currentUserIdString);
 
             Blog createdBlog = await _blogRepository.CreateBlogAsync(blog);
             var blogDetails = _mapper.Map<BlogDetailsDto>(createdBlog);
@@ -96,27 +92,20 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
                 throw new NotFoundException("Blog not found.");
             }
 
-            if (_httpContextAccessor.HttpContext != null)
-            {
-                var currentUserIdString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var currentUserRole = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
+            var currentUserIdString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUserRole = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
                 
-                var tokenGenerationTimeString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Expiration)?.Value;
-                var tokenGenerationTime = Convert.ToDateTime(tokenGenerationTimeString);
+            var tokenGenerationTimeString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Expiration)?.Value;
+            var tokenGenerationTime = Convert.ToDateTime(tokenGenerationTimeString);
 
-                if (!AuthChecker.IsUserAuthorized(currentUserIdString, blog.Author.UserId.ToString(), currentUserRole))
-                {
-                    throw new ForbiddenException("You are not authorized.");
-                }
-
-                if (AuthChecker.IsTokenExpired(tokenGenerationTime, blog.Author.PasswordChangedAt))
-                {
-                    throw new UnauthorizedException("Token is expired. Log in again.");
-                }
-            }
-            else
+            if (!_authchecker.IsUserAuthorized(currentUserIdString, blog.Author?.UserId.ToString(), currentUserRole))
             {
-                throw new BadRequestException("Bad Request.");
+                throw new ForbiddenException("You are not authorized.");
+            }
+
+            if (_authchecker.IsTokenExpired(tokenGenerationTime, blog.Author?.PasswordChangedAt))
+            {
+                throw new UnauthorizedException("Token is expired. Log in again.");
             }
 
             blog.Title = blogDetails.Title;
@@ -139,27 +128,20 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
                 throw new NotFoundException("Blog not found.");
             }
 
-            if (_httpContextAccessor.HttpContext != null)
+            var currentUserIdString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUserRole = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
+
+            var tokenGenerationTime = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Expiration)?.Value;
+            var passwordChangedAt = Convert.ToDateTime(tokenGenerationTime);
+
+            if (!_authchecker.IsUserAuthorized(currentUserIdString, blog.Author?.UserId.ToString(), currentUserRole))
             {
-                var currentUserIdString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var currentUserRole = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
-
-                var tokenGenerationTime = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Expiration)?.Value;
-                var passwordChangedAt = Convert.ToDateTime(tokenGenerationTime);
-
-                if (!AuthChecker.IsUserAuthorized(currentUserIdString, blog.Author.UserId.ToString(), currentUserRole))
-                {
-                    throw new ForbiddenException("You are not authorized.");
-                }
-
-                if (AuthChecker.IsTokenExpired(passwordChangedAt, blog.Author.PasswordChangedAt))
-                {
-                    throw new UnauthorizedException("Token is expired. Log in again.");
-                }
+                throw new ForbiddenException("You are not authorized.");
             }
-            else
+
+            if (_authchecker.IsTokenExpired(passwordChangedAt, blog.Author?.PasswordChangedAt))
             {
-                throw new BadRequestException("Bad Request.");
+                throw new UnauthorizedException("Token is expired. Log in again.");
             }
 
             return await _blogRepository.DeleteBlogAsync(blog);

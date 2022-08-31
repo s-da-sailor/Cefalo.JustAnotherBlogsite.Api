@@ -6,6 +6,7 @@ using Cefalo.JustAnotherBlogsite.Service.Dtos;
 using Cefalo.JustAnotherBlogsite.Service.DtoValidators;
 using Cefalo.JustAnotherBlogsite.Service.Exceptions;
 using Cefalo.JustAnotherBlogsite.Service.Utilities;
+using Cefalo.JustAnotherBlogsite.Service.Utilities.Contracts;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -23,13 +24,15 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly BaseDtoValidator<UserUpdateDto> _userUpdateDtoValidator;
+        private readonly IAuthChecker _authChecker;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, BaseDtoValidator<UserUpdateDto> userUpdateDtoValidator)
+        public UserService(IUserRepository userRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor, BaseDtoValidator<UserUpdateDto> userUpdateDtoValidator, IAuthChecker authChecker)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _userUpdateDtoValidator = userUpdateDtoValidator;
+            _authChecker = authChecker;
         }
         public async Task<List<UserDetailsDto>> GetUsersAsync(int pageNumber, int pageSize)
         {
@@ -92,12 +95,12 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
                 var tokenGenerationTimeString = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Expiration)?.Value;
                 var tokenGenerationTime = Convert.ToDateTime(tokenGenerationTimeString);
 
-                if (!AuthChecker.IsUserAuthorized(currentUserIdString, userId.ToString(), currentUserRole))
+                if (!_authChecker.IsUserAuthorized(currentUserIdString, userId.ToString(), currentUserRole))
                 {
                     throw new ForbiddenException("You are not authorized.");
                 }
 
-                if (AuthChecker.IsTokenExpired(tokenGenerationTime, user.PasswordChangedAt))
+                if (_authChecker.IsTokenExpired(tokenGenerationTime, user.PasswordChangedAt))
                 {
                     throw new UnauthorizedException("Token is expired. Log in again.");
                 }
@@ -143,12 +146,12 @@ namespace Cefalo.JustAnotherBlogsite.Service.Services
                 var tokenGenerationTime = _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.Expiration)?.Value;
                 var passwordChangedAt = Convert.ToDateTime(tokenGenerationTime);
 
-                if (!AuthChecker.IsUserAuthorized(currentUserIdString, userId.ToString(), currentUserRole))
+                if (!_authChecker.IsUserAuthorized(currentUserIdString, userId.ToString(), currentUserRole))
                 {
                     throw new ForbiddenException("You are not authorized.");
                 }
 
-                if (AuthChecker.IsTokenExpired(passwordChangedAt, user.PasswordChangedAt))
+                if (_authChecker.IsTokenExpired(passwordChangedAt, user.PasswordChangedAt))
                 {
                     throw new UnauthorizedException("Token is expired. Log in again.");
                 }
