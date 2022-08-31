@@ -2701,7 +2701,6 @@ namespace Cefalo.JustAnotherBlogsite.Service.UnitTests.Services
             actualResponse.Should().BeEquivalentTo(expectedResponse);
         }
 
-        // ..................................ON PROGRESS......................................................
         [Fact]
         public async void DeleteBlogAsync_WhenRequestIsValid_GetBlogByBlogIdAsyncOfBlogRepositoryIsCalledCorrecty()
         {
