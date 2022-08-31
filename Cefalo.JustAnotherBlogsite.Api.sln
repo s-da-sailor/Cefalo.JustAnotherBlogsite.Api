@@ -14,7 +14,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.JustAnotherBlogsite.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.JustAnotherBlogsite.Database", "Cefalo.JustAnotherBlogsite.Database\Cefalo.JustAnotherBlogsite.Database.csproj", "{B0302671-F4BF-4FA8-A4BA-B831EDBC69E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cefalo.JustAnotherBlogsite.Api.UnitTests", "Cefalo.JustAnotherBlogsite.Api.UnitTests\Cefalo.JustAnotherBlogsite.Api.UnitTests.csproj", "{BDCDFE03-0C98-4E1D-BFD4-444B3DA82463}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cefalo.JustAnotherBlogsite.Api.UnitTests", "Cefalo.JustAnotherBlogsite.Api.UnitTests\Cefalo.JustAnotherBlogsite.Api.UnitTests.csproj", "{BDCDFE03-0C98-4E1D-BFD4-444B3DA82463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cefalo.JustAnotherBlogsite.Service.UnitTests", "Cefalo.JustAnotherBlogsite.Service.UnitTests\Cefalo.JustAnotherBlogsite.Service.UnitTests.csproj", "{8326DB79-922D-48F4-85F8-106D666AD9BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,10 @@ Global
 		{BDCDFE03-0C98-4E1D-BFD4-444B3DA82463}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDCDFE03-0C98-4E1D-BFD4-444B3DA82463}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDCDFE03-0C98-4E1D-BFD4-444B3DA82463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8326DB79-922D-48F4-85F8-106D666AD9BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8326DB79-922D-48F4-85F8-106D666AD9BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8326DB79-922D-48F4-85F8-106D666AD9BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8326DB79-922D-48F4-85F8-106D666AD9BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

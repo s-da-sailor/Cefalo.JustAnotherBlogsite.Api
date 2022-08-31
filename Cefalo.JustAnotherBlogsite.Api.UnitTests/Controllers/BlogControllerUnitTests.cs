@@ -1309,8 +1309,6 @@ namespace Cefalo.JustAnotherBlogsite.Api.UnitTests.Controllers
             exception.Message.Should().Be(errorMessage);
         }
 
-        ///..........................On Progress.......................................
-
         [Fact]
         public async void DeleteBlogAsync_WhenRequestIsValid_ResponseIsOfCorrectType()
         {

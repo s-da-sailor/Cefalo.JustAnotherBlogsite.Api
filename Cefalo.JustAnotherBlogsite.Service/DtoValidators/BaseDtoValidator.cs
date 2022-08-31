@@ -10,7 +10,7 @@ namespace Cefalo.JustAnotherBlogsite.Service.DtoValidators
 {
     public class BaseDtoValidator<T> : AbstractValidator<T>
     {
-        public void ValidateDto(T dto)
+        virtual public void ValidateDto(T dto)
         {
             var ValidationResult = this.Validate(dto);
 
