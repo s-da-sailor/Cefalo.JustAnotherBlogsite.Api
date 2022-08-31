@@ -23,7 +23,8 @@ namespace Cefalo.JustAnotherBlogsite.Repository.Repositories
             _context.Blogs.Add(blog);
             await _context.SaveChangesAsync();
 
-            return await _context.Blogs.Include(u => u.Author).FirstOrDefaultAsync(u => u.BlogId == blog.BlogId);
+            var createdBlog = await _context.Blogs.Include(u => u.Author).FirstOrDefaultAsync(u => u.BlogId == blog.BlogId);
+            return createdBlog;
         }
 
         public async Task<List<Blog>> GetBlogsAsync(int pageNumber, int pageSize)
