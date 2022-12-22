@@ -1,6 +1,5 @@
 # Just-Another-Blogsite
 
-[https://just-another-blogsite.netlify.app](https://just-another-blogsite.netlify.app)
 
 A RestAPI implementation of a blog site that supports authentication and authorization and can provide response data in a variety of formats with content-negotiation. This is a .NET-based backend of this application.
 
